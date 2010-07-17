@@ -1,8 +1,8 @@
 #
 # INFO:
-# This is work taken from the gfs2.spec and moved into a cluster-3 generation. Some of
-# the old work was dropped as it had no interest to the commiter, so if You're 
-# missing something, please look into gfs2.spec and update.
+# This is work taken from the gfs2.spec and moved into a cluster-3 generation. 
+# Some of the old work was dropped as it had no interest to the commiter, 
+# so if You're missing something, please look into gfs2.spec and update.
 #
 
 Summary:	Cluster infrastructure
@@ -12,18 +12,18 @@ Version:	3.0.13
 Release:	0.1
 License:	GPL v2
 Group:		Applications/System
-Source0:	https://fedorahosted.org/releases/c/l/%{name}/%{name}-%{version}.tar.bz2
+Source0:	https://fedorahosted.org/releases/c/l/cluster/%{name}-%{version}.tar.bz2
 # Source0-md5:	d13aac279519af926894cc25722b1f9f
 URL:		http://sources.redhat.com/cluster/
 BuildRequires:	corosync-devel
 BuildRequires:	libvirt-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxslt-progs
+BuildRequires:	ncurses-devel
+BuildRequires:	nspr-devel
+BuildRequires:	nss-devel
 BuildRequires:	openais-devel
 BuildRequires:	openldap-devel
-BuildRequires:	ncurses-devel
-BuildRequires:	nss-devel
-BuildRequires:	nspr-devel
 BuildRequires:	perl-ExtUtils-MakeMaker
 BuildRequires:	python-pexpect
 BuildRequires:	slang-devel
@@ -37,150 +37,150 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %package ccs
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 Requires:	libxml2-progs
 
 %description ccs
-%description ccs -l pl.UTF-u
+%description ccs -l pl.UTF-8
 
 %package ccs-devel
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
-Requires:	%{name}-ccs-libs = %{version}-%{release}	
+Group:		Applications/System
+Requires:	%{name}-ccs-libs = %{version}-%{release}
 
 %description ccs-devel
-%description ccs-devel -l pl.UTF-u
+%description ccs-devel -l pl.UTF-8
 
 %package ccs-libs
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description ccs-libs
-%description ccs-libs -l pl.UTF-u
+%description ccs-libs -l pl.UTF-8
 
 %package ccs-static
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description ccs-static
-%description ccs-static -l pl.UTF-u
+%description ccs-static -l pl.UTF-8
 
 %package cman
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 Requires:	corosync
 Requires:	openais
 
 %description cman
-%description cman -l pl.UTF-u
+%description cman -l pl.UTF-8
 
 %package cman-devel
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
-Requires:	%{name}-cman-libs = %{version}-%{release}	
+Group:		Applications/System
+Requires:	%{name}-cman-libs = %{version}-%{release}
 
 %description cman-devel
-%description cman-devel -l pl.UTF-u
+%description cman-devel -l pl.UTF-8
 
 %package cman-libs
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description cman-libs
-%description cman-libs -l pl.UTF-u
+%description cman-libs -l pl.UTF-8
 
 %package cman-static
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description cman-static
-%description cman-static -l pl.UTF-u
+%description cman-static -l pl.UTF-8
 
 %package dlm
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description dlm
-%description dlm -l pl.UTF-u
+%description dlm -l pl.UTF-8
 
 %package dlm-devel
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
-Requires:	%{name}-dlm-libs = %{version}-%{release}	
+Group:		Applications/System
+Requires:	%{name}-dlm-libs = %{version}-%{release}
 
 %description dlm-devel
-%description dlm-devel -l pl.UTF-u
+%description dlm-devel -l pl.UTF-8
 
 %package dlm-libs
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description dlm-libs
-%description dlm-libs -l pl.UTF-u
+%description dlm-libs -l pl.UTF-8
 
 %package dlm-static
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description dlm-static
-%description dlm-static -l pl.UTF-u
+%description dlm-static -l pl.UTF-8
 
 %package fence
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description fence
-%description fence -l pl.UTF-u
+%description fence -l pl.UTF-8
 
 %package fence-devel
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
-Requires:	%{name}-fence-libs = %{version}-%{release}	
+Group:		Applications/System
+Requires:	%{name}-fence-libs = %{version}-%{release}
 
 %description fence-devel
-%description fence-devel -l pl.UTF-u
+%description fence-devel -l pl.UTF-8
 
 %package fence-libs
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description fence-libs
-%description fence-libs -l pl.UTF-u
+%description fence-libs -l pl.UTF-8
 
 %package fence-static
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description fence-static
-%description fence-static -l pl.UTF-u
+%description fence-static -l pl.UTF-8
 
 %package group
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description group
-%description group -l pl.UTF-u
+%description group -l pl.UTF-8
 
 %package gfs2
 Summary:	Shared-disk cluster filesystem
 Summary(pl.UTF-8):	Klastrowy system plików na współdzielonym dysku
-Group:		Application/System
+Group:		Applications/System
 
 %description gfs2
 GFS (Global File System) is a cluster file system. It allows a cluster
@@ -189,8 +189,8 @@ between them (with FC, iSCSI, NBD, etc...). GFS reads and writes to
 the block device like a local filesystem, but also uses a lock module
 to allow the computers coordinate their I/O so filesystem consistency
 is maintained. One of the nifty features of GFS is perfect consistency
--- changes made to the filesystem on one machine show up immediately on all
-other machines in the cluster.
+- -- changes made to the filesystem on one machine show up immediately
+  on all other machines in the cluster.
 
 %description gfs2 -l pl.UTF-8
 GFS (Global File System) to klastrowy system plików. Pozwala klastrowi
@@ -206,10 +206,10 @@ wszystkich innych maszynach w klastrze.
 %package rgmanager
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
-Group:		Application/System
+Group:		Applications/System
 
 %description rgmanager
-%description rgmanager -l pl.UTF-u
+%description rgmanager -l pl.UTF-8
 
 %prep
 %setup -q
@@ -226,8 +226,8 @@ sed -i -e 's/ -O2 -ggdb / %{rpmcflags} /' gfs2/mkfs/Makefile
 	--prefix=%{_prefix} \
 	--sbindir=%{_sbindir} \
 	--ncursesincdir=/usr/include/ncurses \
-	--nsprincdir=/usr/include/nspr \
-	--nssincdir=/usr/include/nss \
+	--nsprincdir=%{_includedir}/nspr \
+	--nssincdir=%{_includedir}/nss \
 	--without_kernel_modules --disable_kernel_check
 
 %{__make}
@@ -238,7 +238,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/etc/cluster
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/cluster
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 install -d $RPM_BUILD_ROOT/var/log/cluster
 mv $RPM_BUILD_ROOT/''etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
@@ -282,7 +282,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_sysconfdir}/cluster
 /etc/logrotate.d/cluster
-%attr(754,root,root) %{_sysconfdir}/rc.d/init.d/cman
+%attr(754,root,root) /etc/rc.d/init.d/cman
 %attr(755,root,root) %{_sbindir}/cman_notify
 %attr(755,root,root) %{_sbindir}/cman_tool
 %attr(755,root,root) %{_sbindir}/cmannotifyd
