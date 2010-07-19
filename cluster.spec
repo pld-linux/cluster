@@ -9,12 +9,12 @@ Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
 Name:		cluster
 Version:	3.0.13
-Release:	0.1
+Release:	0.2
 License:	GPL v2
 Group:		Applications/System
-Source0:	https://fedorahosted.org/releases/c/l/cluster/%{name}-%{version}.tar.bz2
+Source0:	https://fedorahosted.org/releases/c/l/%{name}/%{name}-%{version}.tar.bz2
 # Source0-md5:	d13aac279519af926894cc25722b1f9f
-URL:		http://sources.redhat.com/cluster/
+URL:		http://sources.redhat.com/cluster/wiki
 BuildRequires:	corosync-devel
 BuildRequires:	libvirt-devel
 BuildRequires:	libxml2-devel
@@ -27,6 +27,8 @@ BuildRequires:	openldap-devel
 BuildRequires:	perl-ExtUtils-MakeMaker
 BuildRequires:	python-pexpect
 BuildRequires:	slang-devel
+Requires:	%{name}-cman-%{version}
+Requires:	%{name}-rgmanager-%{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -35,17 +37,21 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description -l pl.UTF-8
 
 %package ccs
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster configuration system
+Summary(pl.UTF-8):	System konfiguracji klastra
 Group:		Applications/System
 Requires:	libxml2-progs
 
 %description ccs
+Cluster configuration system to manage the cluster config file.
+
 %description ccs -l pl.UTF-8
+System konfiguracji klastra do zarządzania jego plikiem
+konfiguracyjnym.
 
 %package ccs-devel
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster configuration system
+Summary(pl.UTF-8):	System konfiguracji klastra
 Group:		Applications/System
 Requires:	%{name}-ccs-libs = %{version}-%{release}
 
@@ -53,34 +59,58 @@ Requires:	%{name}-ccs-libs = %{version}-%{release}
 %description ccs-devel -l pl.UTF-8
 
 %package ccs-libs
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster configuration system
+Summary(pl.UTF-8):	System konfiguracji klastra
 Group:		Applications/System
 
 %description ccs-libs
 %description ccs-libs -l pl.UTF-8
 
 %package ccs-static
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster configuration system
+Summary(pl.UTF-8):	System konfiguracji klastra
 Group:		Applications/System
 
 %description ccs-static
 %description ccs-static -l pl.UTF-8
 
 %package cman
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure manager
+Summary(pl.UTF-8):	Zarządca infrastruktury klastra
 Group:		Applications/System
 Requires:	corosync
 Requires:	openais
+Requires:	%{name}-ccs-%{version}
+Requires:	%{name}-dlm-%{version}
+Requires:	%{name}-fence-%{version}
+Requires:	%{name}-group-%{version}
 
 %description cman
+MAN is a symmetric, general-purpose, kernel-based cluster manager. It
+has two parts. Connection Manager (cnxman) handles membership,
+messaging, quorum, event notification and transitions. Service Manager
+(sm) handles "service groups" which are a general way of representing
+and managing instances of external systems that require cluster
+management. The CMAN cluster manager is the foundational system upon
+which DLM, GFS, CLVM, and Fence all depend. The CMAN API in the kernel
+and userspace is general and available for other programs to use.
+
 %description cman -l pl.UTF-8
+MAN to zarządca opartych na jądrze symetrycznych klastrów ogólnego
+przeznaczenia. Składa się z dwóch części. Zarządca połączeń
+(Connection Manager, cnxman) obsługuje członkostwo, komunikację,
+kworum, powiadamianie o zdarzeniach i przejścia. Zarządca usług
+(Service Manager, sm) obsługuje "grupy usług", które są ogólnym
+sposobem reprezentacji i zarządzania instancjami zewnętrznych systemów
+wymagających zarządzania klastrem. Zarządca klastrów CMAN to
+podstawowy system, na którym polegają DLM, GFS, CLVM i Fence. API
+CMAN-a w jądrze i przestrzeni użytkownika jest ogólne i w całości
+dostępne do wykorzystania w innych programach.
+
 
 %package cman-devel
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure manager
+Summary(pl.UTF-8):	Zarządca infrastruktury klastra
 Group:		Applications/System
 Requires:	%{name}-cman-libs = %{version}-%{release}
 
@@ -88,32 +118,40 @@ Requires:	%{name}-cman-libs = %{version}-%{release}
 %description cman-devel -l pl.UTF-8
 
 %package cman-libs
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure manager
+Summary(pl.UTF-8):	Zarządca infrastruktury klastra
 Group:		Applications/System
 
 %description cman-libs
 %description cman-libs -l pl.UTF-8
 
 %package cman-static
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure manager
+Summary(pl.UTF-8):	Zarządca infrastruktury klastra
 Group:		Applications/System
 
 %description cman-static
 %description cman-static -l pl.UTF-8
 
 %package dlm
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure lock manager
+Summary(pl.UTF-8):	Zarządca blokad infrastruktury klastra
 Group:		Applications/System
 
 %description dlm
+The DLM lock manager is a kernel-based VMS-like distributed lock
+manager. It is general purpose and not specific to only GFS or CLVM.
+Kernel and userspace locking API's are available.
+
 %description dlm -l pl.UTF-8
+Zarządca blokad DLM to oparty na jądrze zarządca rozproszonych blokad
+w stylu VMS. Jest ogólnego przeznaczenia, przeznaczonym nie tylko dla
+GFS-a czy CLVM-a. Dostępne są API blokowania w jądrze i przestrzeni
+użytkownika.
 
 %package dlm-devel
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure lock manager
+Summary(pl.UTF-8):	Zarządca blokad infrastruktury klastra
 Group:		Applications/System
 Requires:	%{name}-dlm-libs = %{version}-%{release}
 
@@ -121,32 +159,56 @@ Requires:	%{name}-dlm-libs = %{version}-%{release}
 %description dlm-devel -l pl.UTF-8
 
 %package dlm-libs
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure lock manager
+Summary(pl.UTF-8):	Zarządca blokad infrastruktury klastra
 Group:		Applications/System
 
 %description dlm-libs
 %description dlm-libs -l pl.UTF-8
 
 %package dlm-static
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure lock manager
+Summary(pl.UTF-8):	Zarządca blokad infrastruktury klastra
 Group:		Applications/System
 
 %description dlm-static
 %description dlm-static -l pl.UTF-8
 
 %package fence
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure I/O fencing system
+Summary(pl.UTF-8):	System barier I/O infrastruktury klastra
 Group:		Applications/System
 
 %description fence
+The Fence system does I/O fencing of cluster members. Any member may
+join the default fence domain after which it will be fenced if it
+fails without leaving the fence domain cleanly. The lock_dlm GFS lock
+module will not permit GFS to be mounted until the node has joined a
+fence domain.
+
+The fence daemon, fenced, is usually started by running "fence_tool
+join". Once started, fenced joins the default fence domain and the
+node is subject to being fenced if it fails. A collection of fence
+agents are used by fenced to interface with hardware devices (usually
+to shut off its path to shared storage or cycle its power source.)
+
 %description fence -l pl.UTF-8
+System Fence odpowiada za bariery I/O dla członków klastra. Każdy z
+członków może dołączyć do domyślnej domeny barier, po czym będzie
+odgrodzony jeśli zawiedzie nie opuszczając czysto domeny barier. Moduł
+blokujący GFS-a lock_dlm nie pozwoli na podmontowanie GFS-a dopóki
+węzeł nie dołączy do domeny barier.
+
+Demon fence, fenced, jest zwykle uruchamiany przez fence_tool join. Po
+uruchomieniu fenced dołącza do domyślnej domeny barier, a węzeł jest
+przedmiotem odgrodzenia jeśli zawiedzie. fenced wykorzystuje zbiór
+agentów fence do komunikacji z urządzeniami sprzętowymi (zwykle do
+odcinania drogi do dzielonej pamięci lub wyłączania i włączania
+zasilania).
 
 %package fence-devel
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure I/O fencing system
+Summary(pl.UTF-8):	System barier I/O infrastruktury klastra
 Group:		Applications/System
 Requires:	%{name}-fence-libs = %{version}-%{release}
 
@@ -154,16 +216,16 @@ Requires:	%{name}-fence-libs = %{version}-%{release}
 %description fence-devel -l pl.UTF-8
 
 %package fence-libs
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure I/O fencing system
+Summary(pl.UTF-8):	System barier I/O infrastruktury klastra
 Group:		Applications/System
 
 %description fence-libs
 %description fence-libs -l pl.UTF-8
 
 %package fence-static
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster infrastructure I/O fencing system
+Summary(pl.UTF-8):	System barier I/O infrastruktury klastra
 Group:		Applications/System
 
 %description fence-static
@@ -204,12 +266,18 @@ systemie plików na jednej maszynie natychmiast pokazują się na
 wszystkich innych maszynach w klastrze.
 
 %package rgmanager
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	HA resource group failover
+Summary(pl.UTF-8):	Failover dla grupy zasobów wysokiej dostępności
 Group:		Applications/System
 
 %description rgmanager
+Resource Group Manager provides high availability of critical server
+applications in the event of planned or unplanned system downtime.
+
 %description rgmanager -l pl.UTF-8
+Resource Group Manager daje wysoką dostępność krytycznych aplikacji
+serwerowych w przypadku planowanych lub nieplanowanych wyłączeń
+serwera.
 
 %prep
 %setup -q
@@ -277,7 +345,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libccs.a
 
-
 %files cman
 %defattr(644,root,root,755)
 %{_sysconfdir}/cluster
@@ -321,7 +388,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libcman.a
 %{_libdir}/liblogthread.a
 
-
 %files dlm
 %defattr(644,root,root,755)
 /etc/udev/rules.d/51-dlm.rules
@@ -355,7 +421,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libdlm.a
 %{_libdir}/libdlm_lt.a
 %{_libdir}/libdlmcontrol.a
-
 
 %files fence
 %defattr(644,root,root,755)
