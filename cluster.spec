@@ -9,7 +9,7 @@ Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
 Name:		cluster
 Version:	3.0.13
-Release:	0.2
+Release:	0.3
 License:	GPL v2
 Group:		Applications/System
 Source0:	https://fedorahosted.org/releases/c/l/%{name}/%{name}-%{version}.tar.bz2
@@ -27,8 +27,8 @@ BuildRequires:	openldap-devel
 BuildRequires:	perl-ExtUtils-MakeMaker
 BuildRequires:	python-pexpect
 BuildRequires:	slang-devel
-Requires:	%{name}-cman-%{version}
-Requires:	%{name}-rgmanager-%{version}
+Requires:	%{name}-cman = %{version}-%{release}
+Requires:	%{name}-rgmanager = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -80,10 +80,10 @@ Summary(pl.UTF-8):	Zarządca infrastruktury klastra
 Group:		Applications/System
 Requires:	corosync
 Requires:	openais
-Requires:	%{name}-ccs-%{version}
-Requires:	%{name}-dlm-%{version}
-Requires:	%{name}-fence-%{version}
-Requires:	%{name}-group-%{version}
+Requires:	%{name}-ccs = %{version}-%{release}
+Requires:	%{name}-dlm = %{version}-%{release}
+Requires:	%{name}-fence = %{version}-%{release}
+Requires:	%{name}-group = %{version}-%{release}
 
 %description cman
 MAN is a symmetric, general-purpose, kernel-based cluster manager. It
