@@ -8,12 +8,12 @@
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
 Name:		cluster
-Version:	3.0.13
-Release:	0.3
+Version:	3.0.16
+Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	https://fedorahosted.org/releases/c/l/%{name}/%{name}-%{version}.tar.bz2
-# Source0-md5:	d13aac279519af926894cc25722b1f9f
+# Source0-md5:	cc4a1a2c4084946d8c945adb12ac5c25
 URL:		http://sources.redhat.com/cluster/wiki
 BuildRequires:	corosync-devel
 BuildRequires:	libvirt-devel
@@ -422,10 +422,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libdlm_lt.a
 %{_libdir}/libdlmcontrol.a
 
+# perl and python files are also here, as the various fence agents
+# use them (otherwise it would need to split package to different 
+# fence agents categories)
 %files fence
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/fence_*
 %attr(755,root,root) %{_sbindir}/fenced
+%{_datadir}/fence
+%{perl_vendorarch}/Cluster
+%{perl_vendorarch}/auto/Cluster
 %{_mandir}/man8/fence_*.*
 %{_mandir}/man8/fenced.*
 
@@ -437,6 +443,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgconfigdir}/libfenced.pc
 %attr(755,root,root) %{_libdir}/libfence.so
 %attr(755,root,root) %{_libdir}/libfenced.so
+%{_mandir}/man3/Cluster::CCS.3pm.*
 
 %files fence-libs
 %defattr(644,root,root,755)
