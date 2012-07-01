@@ -1,28 +1,23 @@
 #
-# INFO:
-# This is work taken from the gfs2.spec and moved into a cluster-3 generation. 
-# Some of the old work was dropped as it had no interest to the commiter, 
-# so if You're missing something, please look into gfs2.spec and update.
-#
-
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
 Name:		cluster
-Version:	3.0.16
+Version:	3.1.8
 Release:	1
 License:	GPL v2
 Group:		Applications/System
 Source0:	https://fedorahosted.org/releases/c/l/%{name}/%{name}-%{version}.tar.bz2
-# Source0-md5:	cc4a1a2c4084946d8c945adb12ac5c25
+# Source0-md5:	25699384c42c28bbec2998c25e7a8300
+Source1:	%{name}.tmpfiles
 URL:		http://sources.redhat.com/cluster/wiki
-BuildRequires:	corosync-devel
+BuildRequires:	corosync-devel >= 1.4.1
 BuildRequires:	libvirt-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxslt-progs
 BuildRequires:	ncurses-devel
 BuildRequires:	nspr-devel
 BuildRequires:	nss-devel
-BuildRequires:	openais-devel
+BuildRequires:	openais-devel >= 1.1.4
 BuildRequires:	openldap-devel
 BuildRequires:	perl-ExtUtils-MakeMaker
 BuildRequires:	python-pexpect
@@ -84,6 +79,7 @@ Requires:	%{name}-ccs = %{version}-%{release}
 Requires:	%{name}-dlm = %{version}-%{release}
 Requires:	%{name}-fence = %{version}-%{release}
 Requires:	%{name}-group = %{version}-%{release}
+Obsoletes:	cman
 
 %description cman
 MAN is a symmetric, general-purpose, kernel-based cluster manager. It
@@ -137,6 +133,7 @@ Group:		Applications/System
 Summary:	Cluster infrastructure lock manager
 Summary(pl.UTF-8):	Zarządca blokad infrastruktury klastra
 Group:		Applications/System
+Obsoletes:	dlm
 
 %description dlm
 The DLM lock manager is a kernel-based VMS-like distributed lock
@@ -178,6 +175,7 @@ Group:		Applications/System
 Summary:	Cluster infrastructure I/O fencing system
 Summary(pl.UTF-8):	System barier I/O infrastruktury klastra
 Group:		Applications/System
+Suggests:	fence-agents
 
 %description fence
 The Fence system does I/O fencing of cluster members. Any member may
@@ -269,6 +267,7 @@ wszystkich innych maszynach w klastrze.
 Summary:	HA resource group failover
 Summary(pl.UTF-8):	Failover dla grupy zasobów wysokiej dostępności
 Group:		Applications/System
+Suggests:	resource-agents
 
 %description rgmanager
 Resource Group Manager provides high availability of critical server
@@ -283,8 +282,6 @@ serwera.
 %setup -q
 
 sed -i -e 's,-Wall,%{rpmcflags} -I/usr/include/ncurses -Wall,' make/defines.mk.input
-sed -i -e 's/ -ggdb / %{rpmcflags} /' gfs2/libgfs2/Makefile
-sed -i -e 's/ -O2 -ggdb / %{rpmcflags} /' gfs2/mkfs/Makefile
 
 %build
 ./configure \
@@ -294,22 +291,21 @@ sed -i -e 's/ -O2 -ggdb / %{rpmcflags} /' gfs2/mkfs/Makefile
 	--prefix=%{_prefix} \
 	--sbindir=%{_sbindir} \
 	--ncursesincdir=/usr/include/ncurses \
-	--nsprincdir=%{_includedir}/nspr \
-	--nssincdir=%{_includedir}/nss \
-	--without_kernel_modules --disable_kernel_check
+	--disable_kernel_check
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/cluster,/etc/rc.d/init.d} \
+		$RPM_BUILD_ROOT{/var/log/cluster,%{systemdtmpfilesdir}}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/cluster
-install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
-install -d $RPM_BUILD_ROOT/var/log/cluster
 mv $RPM_BUILD_ROOT/''etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
+
+install %{SOURCE1} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -324,11 +320,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/ccs_config_validate
 %attr(755,root,root) %{_sbindir}/ccs_test
 %attr(755,root,root) %{_sbindir}/ccs_tool
+%attr(755,root,root) %{_sbindir}/ccs_update_schema
 %attr(755,root,root) %{_libdir}/lcrso/*.lcrso
 %{_mandir}/man8/ccs_config_dump.*
 %{_mandir}/man8/ccs_config_validate.*
 %{_mandir}/man8/ccs_tool.*
+%{_mandir}/man8/ccs_update_schema.*
 %{_mandir}/man8/confdb2ldif.*
+%attr(700,root,root) /var/run/cluster
+%{systemdtmpfilesdir}/%{name}.conf
 
 %files ccs-libs
 %defattr(644,root,root,755)
@@ -360,8 +360,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/cluster.conf.*
 %{_mandir}/man5/cman.*
 %{_mandir}/man5/qdisk.*
-%{_mandir}/man8/cman_tool.*
+%{_mandir}/man8/checkquorum.*
 %{_mandir}/man8/cman_notify.*
+%{_mandir}/man8/cman_tool.*
 %{_mandir}/man8/cmannotifyd.*
 %{_mandir}/man8/mkqdisk.*
 %{_mandir}/man8/qdiskd.*
@@ -390,7 +391,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files dlm
 %defattr(644,root,root,755)
-/etc/udev/rules.d/51-dlm.rules
+/lib/udev/rules.d/51-dlm.rules
 %attr(755,root,root) %{_sbindir}/dlm_tool
 %{_mandir}/man8/dlm_tool.*
 
@@ -422,14 +423,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libdlm_lt.a
 %{_libdir}/libdlmcontrol.a
 
-# perl and python files are also here, as the various fence agents
-# use them (otherwise it would need to split package to different 
-# fence agents categories)
 %files fence
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/fence_*
 %attr(755,root,root) %{_sbindir}/fenced
-%{_datadir}/fence
 %{perl_vendorarch}/Cluster
 %{perl_vendorarch}/auto/Cluster
 %{_mandir}/man8/fence_*.*
@@ -460,38 +457,11 @@ rm -rf $RPM_BUILD_ROOT
 %files group
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/dlm_controld
-%attr(755,root,root) %{_sbindir}/gfs_control
-%attr(755,root,root) %{_sbindir}/gfs_controld
 %attr(755,root,root) %{_sbindir}/group_tool
 %attr(755,root,root) %{_sbindir}/groupd
 %{_mandir}/man8/dlm_controld.*
-%{_mandir}/man8/gfs_control.*
-%{_mandir}/man8/gfs_controld.*
 %{_mandir}/man8/group_tool.*
 %{_mandir}/man8/groupd.*
-
-%files gfs2
-%defattr(644,root,root,755)
-%attr(754,root,root) /etc/rc.d/init.d/gfs2
-%attr(755,root,root) %{_sbindir}/fsck.gfs2
-%attr(755,root,root) %{_sbindir}/gfs2_convert
-%attr(755,root,root) %{_sbindir}/gfs2_edit
-%attr(755,root,root) %{_sbindir}/gfs2_grow
-%attr(755,root,root) %{_sbindir}/gfs2_jadd
-%attr(755,root,root) %{_sbindir}/gfs2_quota
-%attr(755,root,root) %{_sbindir}/gfs2_tool
-%attr(755,root,root) %{_sbindir}/mkfs.gfs2
-%attr(755,root,root) %{_sbindir}/mount.gfs2
-%{_mandir}/man8/fsck.gfs2.*
-%{_mandir}/man8/gfs2.*
-%{_mandir}/man8/gfs2_convert.*
-%{_mandir}/man8/gfs2_edit.*
-%{_mandir}/man8/gfs2_grow.*
-%{_mandir}/man8/gfs2_jadd.*
-%{_mandir}/man8/gfs2_quota.*
-%{_mandir}/man8/gfs2_tool.*
-%{_mandir}/man8/mkfs.gfs2.*
-%{_mandir}/man8/mount.gfs2.*
 
 %files rgmanager
 %defattr(644,root,root,755)
@@ -501,7 +471,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/clulog
 %attr(755,root,root) %{_sbindir}/clunfslock
 %attr(755,root,root) %{_sbindir}/clurgmgrd
-#%attr(755,root,root) %{_sbindir}/clurmtabd
 %attr(755,root,root) %{_sbindir}/clustat
 %attr(755,root,root) %{_sbindir}/clusvcadm
 %attr(755,root,root) %{_sbindir}/rg_test
@@ -509,9 +478,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/clubufflush.*
 %{_mandir}/man8/clufindhostname.*
 %{_mandir}/man8/clulog.*
-#%{_mandir}/man8/clunfslock.*
 %{_mandir}/man8/clurgmgrd.*
-#%{_mandir}/man8/clurmtabd.*
 %{_mandir}/man8/clustat.*
 %{_mandir}/man8/clusvcadm.*
 %{_mandir}/man8/rgmanager.*
