@@ -6,7 +6,7 @@ Version:	3.1.8
 Release:	1
 License:	GPL v2
 Group:		Applications/System
-Source0:	https://fedorahosted.org/releases/c/l/%{name}/%{name}-%{version}.tar.bz2
+Source0:	https://fedorahosted.org/releases/c/l/cluster/%{name}-%{version}.tar.bz2
 # Source0-md5:	25699384c42c28bbec2998c25e7a8300
 Source1:	%{name}.tmpfiles
 URL:		http://sources.redhat.com/cluster/wiki
@@ -45,40 +45,49 @@ System konfiguracji klastra do zarządzania jego plikiem
 konfiguracyjnym.
 
 %package ccs-devel
-Summary:	Cluster configuration system
-Summary(pl.UTF-8):	System konfiguracji klastra
+Summary:	Header filed for ccs library
+Summary(pl.UTF-8):	Pliki nagłówkowe dla biblioteki ccs
 Group:		Applications/System
 Requires:	%{name}-ccs-libs = %{version}-%{release}
 
 %description ccs-devel
+Header filed for ccs library.
+
 %description ccs-devel -l pl.UTF-8
+Pliki nagłówkowe dla biblioteki ccs.
 
 %package ccs-libs
-Summary:	Cluster configuration system
-Summary(pl.UTF-8):	System konfiguracji klastra
+Summary:	Cluster configuration system library
+Summary(pl.UTF-8):	Biblioteka systemu konfiguracji klastra
 Group:		Applications/System
 
 %description ccs-libs
+Cluster configuration system library.
+
 %description ccs-libs -l pl.UTF-8
+Biblioteka systemu konfiguracji klastra.
 
 %package ccs-static
-Summary:	Cluster configuration system
-Summary(pl.UTF-8):	System konfiguracji klastra
+Summary:	Static ccs library
+Summary(pl.UTF-8):	Statyczna biblioteka ccs
 Group:		Applications/System
 
 %description ccs-static
+Static ccs library.
+
 %description ccs-static -l pl.UTF-8
+Statyczna biblioteka ccs.
 
 %package cman
 Summary:	Cluster infrastructure manager
 Summary(pl.UTF-8):	Zarządca infrastruktury klastra
 Group:		Applications/System
-Requires:	corosync
-Requires:	openais
 Requires:	%{name}-ccs = %{version}-%{release}
 Requires:	%{name}-dlm = %{version}-%{release}
 Requires:	%{name}-fence = %{version}-%{release}
 Requires:	%{name}-group = %{version}-%{release}
+Requires:	corosync
+Requires:	openais
 Obsoletes:	cman
 
 %description cman
@@ -103,35 +112,45 @@ podstawowy system, na którym polegają DLM, GFS, CLVM i Fence. API
 CMAN-a w jądrze i przestrzeni użytkownika jest ogólne i w całości
 dostępne do wykorzystania w innych programach.
 
-
 %package cman-devel
-Summary:	Cluster infrastructure manager
-Summary(pl.UTF-8):	Zarządca infrastruktury klastra
+Summary:	Header filed for cman library
+Summary(pl.UTF-8):	Pliki nagłówkowe dla biblioteki cman
 Group:		Applications/System
 Requires:	%{name}-cman-libs = %{version}-%{release}
+Obsoletes:	cman-devel
 
 %description cman-devel
+Header filed for cman library.
+
 %description cman-devel -l pl.UTF-8
+Pliki nagłówkowe dla biblioteki cman.
 
 %package cman-libs
-Summary:	Cluster infrastructure manager
-Summary(pl.UTF-8):	Zarządca infrastruktury klastra
+Summary:	Cluster infrastructure manager library
+Summary(pl.UTF-8):	Biblioteka zarządcy infrastruktury klastra
 Group:		Applications/System
 
 %description cman-libs
+Cluster infrastructure manager library.
+
 %description cman-libs -l pl.UTF-8
+Biblioteka zarządcy infrastruktury klastra.
 
 %package cman-static
-Summary:	Cluster infrastructure manager
-Summary(pl.UTF-8):	Zarządca infrastruktury klastra
+Summary:	Static cman library
+Summary(pl.UTF-8):	Statyczna biblioteka cman
 Group:		Applications/System
+Obsoletes:	cman-static
 
 %description cman-static
+Static cman library.
+
 %description cman-static -l pl.UTF-8
+Statyczna biblioteka cman.
 
 %package dlm
-Summary:	Cluster infrastructure lock manager
-Summary(pl.UTF-8):	Zarządca blokad infrastruktury klastra
+Summary:	Distributed lock manager
+Summary(pl.UTF-8):	Zarządca rozporoszonych blokad
 Group:		Applications/System
 Obsoletes:	dlm
 
@@ -147,29 +166,40 @@ GFS-a czy CLVM-a. Dostępne są API blokowania w jądrze i przestrzeni
 użytkownika.
 
 %package dlm-devel
-Summary:	Cluster infrastructure lock manager
-Summary(pl.UTF-8):	Zarządca blokad infrastruktury klastra
+Summary:	Header filed for dlm library
+Summary(pl.UTF-8):	Pliki nagłówkowe dla biblioteki dlm
 Group:		Applications/System
 Requires:	%{name}-dlm-libs = %{version}-%{release}
+Obsoletes:	dlm-devel
 
 %description dlm-devel
+Header filed for dlm library.
+
 %description dlm-devel -l pl.UTF-8
+Pliki nagłówkowe dla biblioteki dlm.
 
 %package dlm-libs
-Summary:	Cluster infrastructure lock manager
-Summary(pl.UTF-8):	Zarządca blokad infrastruktury klastra
+Summary:	Distributed lock manager library
+Summary(pl.UTF-8):	Biblioteka zarządca rozporoszonych blokad
 Group:		Applications/System
 
 %description dlm-libs
+Distributed lock manager library.
+
 %description dlm-libs -l pl.UTF-8
+Biblioteka zarządca rozporoszonych blokad.
 
 %package dlm-static
-Summary:	Cluster infrastructure lock manager
-Summary(pl.UTF-8):	Zarządca blokad infrastruktury klastra
+Summary:	Static dlm library
+Summary(pl.UTF-8):	Statyczna biblioteka dlm
 Group:		Applications/System
+Obsoletes:	dlm-static
 
 %description dlm-static
+Static dlm library.
+
 %description dlm-static -l pl.UTF-8
+Statyczna biblioteka dlm.
 
 %package fence
 Summary:	Cluster infrastructure I/O fencing system
@@ -205,29 +235,38 @@ odcinania drogi do dzielonej pamięci lub wyłączania i włączania
 zasilania).
 
 %package fence-devel
-Summary:	Cluster infrastructure I/O fencing system
-Summary(pl.UTF-8):	System barier I/O infrastruktury klastra
+Summary:	Header filed for fence library
+Summary(pl.UTF-8):	Pliki nagłówkowe dla biblioteki fence
 Group:		Applications/System
 Requires:	%{name}-fence-libs = %{version}-%{release}
 
 %description fence-devel
+Header filed for fence library.
+
 %description fence-devel -l pl.UTF-8
+Pliki nagłówkowe dla biblioteki fence.
 
 %package fence-libs
-Summary:	Cluster infrastructure I/O fencing system
-Summary(pl.UTF-8):	System barier I/O infrastruktury klastra
+Summary:	Cluster infrastructure I/O fencing system library
+Summary(pl.UTF-8):	Biblioteka systemu barier I/O infrastruktury klastra
 Group:		Applications/System
 
 %description fence-libs
+Cluster infrastructure I/O fencing system library.
+
 %description fence-libs -l pl.UTF-8
+Biblioteka systemu barier I/O infrastruktury klastra.
 
 %package fence-static
-Summary:	Cluster infrastructure I/O fencing system
-Summary(pl.UTF-8):	System barier I/O infrastruktury klastra
+Summary:	Static fence library
+Summary(pl.UTF-8):	Statyczna biblioteka fence
 Group:		Applications/System
 
 %description fence-static
+Static fence library.
+
 %description fence-static -l pl.UTF-8
+Statyczna biblioteka fence.
 
 %package group
 Summary:	Cluster infrastructure
@@ -235,33 +274,10 @@ Summary(pl.UTF-8):	Infrastruktura klastra
 Group:		Applications/System
 
 %description group
+Cluster infrastructure.
+
 %description group -l pl.UTF-8
-
-%package gfs2
-Summary:	Shared-disk cluster filesystem
-Summary(pl.UTF-8):	Klastrowy system plików na współdzielonym dysku
-Group:		Applications/System
-
-%description gfs2
-GFS (Global File System) is a cluster file system. It allows a cluster
-of computers to simultaneously use a block device that is shared
-between them (with FC, iSCSI, NBD, etc...). GFS reads and writes to
-the block device like a local filesystem, but also uses a lock module
-to allow the computers coordinate their I/O so filesystem consistency
-is maintained. One of the nifty features of GFS is perfect consistency
-- -- changes made to the filesystem on one machine show up immediately
-  on all other machines in the cluster.
-
-%description gfs2 -l pl.UTF-8
-GFS (Global File System) to klastrowy system plików. Pozwala klastrowi
-komputerów na jednoczesne korzystanie z urządzenia blokowego
-dzielonego między nimi (poprzez FC, iSCSI, NBD itp.). GFS odczytuje i
-zapisuje urządzenie blokowe jak lokalny system plików, ale używa
-dodatkowo modułu blokującego, aby umożliwić komputerom koordynowanie
-ich operacji I/O w celu zachowania spójności systemu plików. Jedną z
-szykownych możliwości GFS-a jest idealna spójność - zmiany wykonane w
-systemie plików na jednej maszynie natychmiast pokazują się na
-wszystkich innych maszynach w klastrze.
+Infrastruktura klastra.
 
 %package rgmanager
 Summary:	HA resource group failover
