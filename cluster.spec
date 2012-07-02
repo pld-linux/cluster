@@ -1,26 +1,28 @@
 #
+# Conditional build:
+%bcond_without	ldap		# do not include ldap support
+
 Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
 Name:		cluster
 Version:	3.1.8
-Release:	1
+Release:	1.aos1
 License:	GPL v2
 Group:		Applications/System
 Source0:	https://fedorahosted.org/releases/c/l/cluster/%{name}-%{version}.tar.bz2
 # Source0-md5:	25699384c42c28bbec2998c25e7a8300
 Source1:	%{name}.tmpfiles
+Patch0:		%{name}-no_ldap.patch
 URL:		http://sources.redhat.com/cluster/wiki
 BuildRequires:	corosync-devel >= 1.4.1
-BuildRequires:	libvirt-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	libxslt-progs
 BuildRequires:	ncurses-devel
 BuildRequires:	nspr-devel
 BuildRequires:	nss-devel
 BuildRequires:	openais-devel >= 1.1.4
-BuildRequires:	openldap-devel
+%{?with_ldap:BuildRequires:	openldap-devel}
 BuildRequires:	perl-ExtUtils-MakeMaker
-BuildRequires:	python-pexpect
 BuildRequires:	slang-devel
 Requires:	%{name}-cman = %{version}-%{release}
 Requires:	%{name}-rgmanager = %{version}-%{release}
@@ -296,6 +298,7 @@ serwera.
 
 %prep
 %setup -q
+%{!?with_ldap:%patch0 -p1}
 
 sed -i -e 's,-Wall,%{rpmcflags} -I/usr/include/ncurses -Wall,' make/defines.mk.input
 
@@ -331,7 +334,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files ccs
 %defattr(644,root,root,755)
+%if %{with ldap}
 %attr(755,root,root) %{_sbindir}/confdb2ldif
+%endif
 %attr(755,root,root) %{_sbindir}/ccs_config_dump
 %attr(755,root,root) %{_sbindir}/ccs_config_validate
 %attr(755,root,root) %{_sbindir}/ccs_test
@@ -342,7 +347,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/ccs_config_validate.*
 %{_mandir}/man8/ccs_tool.*
 %{_mandir}/man8/ccs_update_schema.*
+%if %{with ldap}
 %{_mandir}/man8/confdb2ldif.*
+%endif
 %attr(700,root,root) /var/run/cluster
 %{systemdtmpfilesdir}/%{name}.conf
 
