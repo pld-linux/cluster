@@ -6,7 +6,7 @@ Summary:	Cluster infrastructure
 Summary(pl.UTF-8):	Infrastruktura klastra
 Name:		cluster
 Version:	3.1.8
-Release:	1.aos1
+Release:	2
 License:	GPL v2
 Group:		Applications/System
 Source0:	https://fedorahosted.org/releases/c/l/cluster/%{name}-%{version}.tar.bz2
@@ -328,6 +328,15 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post   ccs-libs   -p /sbin/ldconfig
+%postun ccs-libs   -p /sbin/ldconfig
+%post   cman-libs  -p /sbin/ldconfig
+%postun cman-libs  -p /sbin/ldconfig
+%post   dlm-libs   -p /sbin/ldconfig
+%postun dlm-libs   -p /sbin/ldconfig
+%post   fence-libs -p /sbin/ldconfig
+%postun fence-libs -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
