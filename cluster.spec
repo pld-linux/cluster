@@ -2,20 +2,21 @@
 # Conditional build:
 %bcond_without	ldap		# do not include ldap support
 
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Linux Cluster infrastructure
+Summary(pl.UTF-8):	Infrastruktura klastra linuksowego
 Name:		cluster
-Version:	3.1.8
-Release:	2
-License:	GPL v2
+Version:	3.2.0
+Release:	1
+License:	LGPL v2.1+ (libraries), GPL v2+ (applications)
 Group:		Applications/System
-Source0:	https://fedorahosted.org/releases/c/l/cluster/%{name}-%{version}.tar.bz2
-# Source0-md5:	25699384c42c28bbec2998c25e7a8300
+Source0:	https://fedorahosted.org/releases/c/l/cluster/%{name}-%{version}.tar.xz
+# Source0-md5:	300d83dbbc525c3da21c2e961271c84b
 Source1:	%{name}.tmpfiles
 Patch0:		%{name}-no_ldap.patch
-URL:		http://sources.redhat.com/cluster/wiki
+URL:		https://fedorahosted.org/cluster/wiki/HomePage
 BuildRequires:	corosync-devel >= 1.4.1
-BuildRequires:	libxml2-devel
+BuildRequires:	corosync-devel < 2
+BuildRequires:	libxml2-devel >= 2.0
 BuildRequires:	libxslt-progs
 BuildRequires:	ncurses-devel
 BuildRequires:	nspr-devel
@@ -31,13 +32,19 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_sbindir	/sbin
 
 %description
+Linux Cluster infrastructure.
+
 %description -l pl.UTF-8
+Infrastruktura klastra linuksowego.
 
 %package ccs
 Summary:	Cluster configuration system
 Summary(pl.UTF-8):	System konfiguracji klastra
 Group:		Applications/System
+Requires:	%{name}-ccs-libs = %{version}-%{release}
+Requires:	corosync >= 1.4.1
 Requires:	libxml2-progs
+Obsoletes:	ccs < 3
 
 %description ccs
 Cluster configuration system to manage the cluster config file.
@@ -46,22 +53,11 @@ Cluster configuration system to manage the cluster config file.
 System konfiguracji klastra do zarządzania jego plikiem
 konfiguracyjnym.
 
-%package ccs-devel
-Summary:	Header filed for ccs library
-Summary(pl.UTF-8):	Pliki nagłówkowe dla biblioteki ccs
-Group:		Applications/System
-Requires:	%{name}-ccs-libs = %{version}-%{release}
-
-%description ccs-devel
-Header filed for ccs library.
-
-%description ccs-devel -l pl.UTF-8
-Pliki nagłówkowe dla biblioteki ccs.
-
 %package ccs-libs
 Summary:	Cluster configuration system library
 Summary(pl.UTF-8):	Biblioteka systemu konfiguracji klastra
-Group:		Applications/System
+Group:		Libraries
+Requires:	corosync-libs >= 1.4.1
 
 %description ccs-libs
 Cluster configuration system library.
@@ -69,10 +65,23 @@ Cluster configuration system library.
 %description ccs-libs -l pl.UTF-8
 Biblioteka systemu konfiguracji klastra.
 
+%package ccs-devel
+Summary:	Header files for ccs library
+Summary(pl.UTF-8):	Pliki nagłówkowe dla biblioteki ccs
+Group:		Development/Libraries
+Requires:	%{name}-ccs-libs = %{version}-%{release}
+Obsoletes:	ccs-devel < 3
+
+%description ccs-devel
+Header files for ccs library.
+
+%description ccs-devel -l pl.UTF-8
+Pliki nagłówkowe dla biblioteki ccs.
+
 %package ccs-static
 Summary:	Static ccs library
 Summary(pl.UTF-8):	Statyczna biblioteka ccs
-Group:		Applications/System
+Group:		Development/Libraries
 
 %description ccs-static
 Static ccs library.
@@ -85,12 +94,13 @@ Summary:	Cluster infrastructure manager
 Summary(pl.UTF-8):	Zarządca infrastruktury klastra
 Group:		Applications/System
 Requires:	%{name}-ccs = %{version}-%{release}
+Requires:	%{name}-cman-libs = %{version}-%{release}
 Requires:	%{name}-dlm = %{version}-%{release}
 Requires:	%{name}-fence = %{version}-%{release}
 Requires:	%{name}-group = %{version}-%{release}
-Requires:	corosync
+Requires:	corosync >= 1.4.1
 Requires:	openais
-Obsoletes:	cman
+Obsoletes:	cman < 3
 
 %description cman
 MAN is a symmetric, general-purpose, kernel-based cluster manager. It
@@ -114,23 +124,20 @@ podstawowy system, na którym polegają DLM, GFS, CLVM i Fence. API
 CMAN-a w jądrze i przestrzeni użytkownika jest ogólne i w całości
 dostępne do wykorzystania w innych programach.
 
-%package cman-devel
-Summary:	Header filed for cman library
-Summary(pl.UTF-8):	Pliki nagłówkowe dla biblioteki cman
-Group:		Applications/System
-Requires:	%{name}-cman-libs = %{version}-%{release}
-Obsoletes:	cman-devel
-
-%description cman-devel
-Header filed for cman library.
-
-%description cman-devel -l pl.UTF-8
-Pliki nagłówkowe dla biblioteki cman.
-
 %package cman-libs
 Summary:	Cluster infrastructure manager library
 Summary(pl.UTF-8):	Biblioteka zarządcy infrastruktury klastra
-Group:		Applications/System
+Group:		Libraries
+Obsoletes:	cman-libs < 3
+# cluster 1.x packages obsoleted by cman-libs 2.x
+Obsoletes:	gulm
+Obsoletes:	gulm-devel
+Obsoletes:	gulm-static
+Obsoletes:	iddev
+Obsoletes:	magma
+Obsoletes:	magma-devel
+Obsoletes:	magma-plugins
+Obsoletes:	magma-static
 
 %description cman-libs
 Cluster infrastructure manager library.
@@ -138,11 +145,24 @@ Cluster infrastructure manager library.
 %description cman-libs -l pl.UTF-8
 Biblioteka zarządcy infrastruktury klastra.
 
+%package cman-devel
+Summary:	Header filed for cman library
+Summary(pl.UTF-8):	Pliki nagłówkowe dla biblioteki cman
+Group:		Development/Libraries
+Requires:	%{name}-cman-libs = %{version}-%{release}
+Obsoletes:	cman-devel < 3
+
+%description cman-devel
+Header filed for cman library.
+
+%description cman-devel -l pl.UTF-8
+Pliki nagłówkowe dla biblioteki cman.
+
 %package cman-static
 Summary:	Static cman library
 Summary(pl.UTF-8):	Statyczna biblioteka cman
-Group:		Applications/System
-Obsoletes:	cman-static
+Group:		Development/Libraries
+Obsoletes:	cman-static < 3
 
 %description cman-static
 Static cman library.
@@ -152,9 +172,10 @@ Statyczna biblioteka cman.
 
 %package dlm
 Summary:	Distributed lock manager
-Summary(pl.UTF-8):	Zarządca rozporoszonych blokad
+Summary(pl.UTF-8):	Zarządca rozproszonych blokad
 Group:		Applications/System
-Obsoletes:	dlm
+Requires:	%{name}-dlm-libs = %{version}-%{release}
+Obsoletes:	dlm < 3
 
 %description dlm
 The DLM lock manager is a kernel-based VMS-like distributed lock
@@ -167,12 +188,24 @@ w stylu VMS. Jest ogólnego przeznaczenia, przeznaczonym nie tylko dla
 GFS-a czy CLVM-a. Dostępne są API blokowania w jądrze i przestrzeni
 użytkownika.
 
+%package dlm-libs
+Summary:	Distributed lock manager library
+Summary(pl.UTF-8):	Biblioteka zarządcy rozproszonych blokad
+Group:		Libraries
+Obsoletes:	dlm-libs < 3
+
+%description dlm-libs
+Distributed lock manager library.
+
+%description dlm-libs -l pl.UTF-8
+Biblioteka zarządcy rozproszonych blokad.
+
 %package dlm-devel
 Summary:	Header filed for dlm library
 Summary(pl.UTF-8):	Pliki nagłówkowe dla biblioteki dlm
-Group:		Applications/System
+Group:		Development/Libraries
 Requires:	%{name}-dlm-libs = %{version}-%{release}
-Obsoletes:	dlm-devel
+Obsoletes:	dlm-devel < 3
 
 %description dlm-devel
 Header filed for dlm library.
@@ -180,22 +213,11 @@ Header filed for dlm library.
 %description dlm-devel -l pl.UTF-8
 Pliki nagłówkowe dla biblioteki dlm.
 
-%package dlm-libs
-Summary:	Distributed lock manager library
-Summary(pl.UTF-8):	Biblioteka zarządca rozporoszonych blokad
-Group:		Applications/System
-
-%description dlm-libs
-Distributed lock manager library.
-
-%description dlm-libs -l pl.UTF-8
-Biblioteka zarządca rozporoszonych blokad.
-
 %package dlm-static
 Summary:	Static dlm library
 Summary(pl.UTF-8):	Statyczna biblioteka dlm
-Group:		Applications/System
-Obsoletes:	dlm-static
+Group:		Development/Libraries
+Obsoletes:	dlm-static < 3
 
 %description dlm-static
 Static dlm library.
@@ -207,7 +229,12 @@ Statyczna biblioteka dlm.
 Summary:	Cluster infrastructure I/O fencing system
 Summary(pl.UTF-8):	System barier I/O infrastruktury klastra
 Group:		Applications/System
+Requires:	%{name}-ccs-libs = %{version}-%{release}
+Requires:	%{name}-cman-libs = %{version}-%{release}
+Requires:	%{name}-fence-libs = %{version}-%{release}
+Requires:	corosync >= 1.4.1
 Suggests:	fence-agents
+Obsoletes:	fence < 3
 
 %description fence
 The Fence system does I/O fencing of cluster members. Any member may
@@ -236,10 +263,22 @@ agentów fence do komunikacji z urządzeniami sprzętowymi (zwykle do
 odcinania drogi do dzielonej pamięci lub wyłączania i włączania
 zasilania).
 
+%package fence-libs
+Summary:	Cluster infrastructure I/O fencing system libraries
+Summary(pl.UTF-8):	Biblioteki systemu barier I/O infrastruktury klastra
+Group:		Libraries
+Requires:	%{name}-ccs-libs = %{version}-%{release}
+
+%description fence-libs
+Cluster infrastructure I/O fencing system libraries.
+
+%description fence-libs -l pl.UTF-8
+Biblioteki systemu barier I/O infrastruktury klastra.
+
 %package fence-devel
 Summary:	Header filed for fence library
 Summary(pl.UTF-8):	Pliki nagłówkowe dla biblioteki fence
-Group:		Applications/System
+Group:		Development/Libraries
 Requires:	%{name}-fence-libs = %{version}-%{release}
 
 %description fence-devel
@@ -248,44 +287,43 @@ Header filed for fence library.
 %description fence-devel -l pl.UTF-8
 Pliki nagłówkowe dla biblioteki fence.
 
-%package fence-libs
-Summary:	Cluster infrastructure I/O fencing system library
-Summary(pl.UTF-8):	Biblioteka systemu barier I/O infrastruktury klastra
-Group:		Applications/System
-
-%description fence-libs
-Cluster infrastructure I/O fencing system library.
-
-%description fence-libs -l pl.UTF-8
-Biblioteka systemu barier I/O infrastruktury klastra.
-
 %package fence-static
-Summary:	Static fence library
-Summary(pl.UTF-8):	Statyczna biblioteka fence
-Group:		Applications/System
+Summary:	Static fence libraries
+Summary(pl.UTF-8):	Statyczne biblioteki fence
+Group:		Development/Libraries
+Requires:	%{name}-fence-devel = %{version}-%{release}
 
 %description fence-static
-Static fence library.
+Static fence libraries.
 
 %description fence-static -l pl.UTF-8
-Statyczna biblioteka fence.
+Statyczne biblioteki fence.
 
 %package group
-Summary:	Cluster infrastructure
-Summary(pl.UTF-8):	Infrastruktura klastra
+Summary:	Cluster 2 compatibility infrastructure
+Summary(pl.UTF-8):	Infrastruktura kompatybilności z klastrem w wersji 2
 Group:		Applications/System
+Requires:	%{name}-ccs-libs = %{version}-%{release}
+Requires:	%{name}-cman-libs = %{version}-%{release}
+Requires:	%{name}-dlm-libs = %{version}-%{release}
+Requires:	%{name}-fence-libs = %{version}-%{release}
 
 %description group
-Cluster infrastructure.
+Cluster 2 compatibility infrastructure.
 
 %description group -l pl.UTF-8
-Infrastruktura klastra.
+Infrastruktura kompatybilności z klastrem w wersji 2.
 
 %package rgmanager
 Summary:	HA resource group failover
 Summary(pl.UTF-8):	Failover dla grupy zasobów wysokiej dostępności
 Group:		Applications/System
+Requires:	%{name}-ccs-libs = %{version}-%{release}
+Requires:	%{name}-cman-libs = %{version}-%{release}
+Requires:	%{name}-dlm-libs = %{version}-%{release}
+Requires:	%{name}-fence-libs = %{version}-%{release}
 Suggests:	resource-agents
+Obsoletes:	rgmanager < 3
 
 %description rgmanager
 Resource Group Manager provides high availability of critical server
@@ -300,7 +338,7 @@ serwera.
 %setup -q
 %{!?with_ldap:%patch0 -p1}
 
-sed -i -e 's,-Wall,%{rpmcflags} -I/usr/include/ncurses -Wall,' make/defines.mk.input
+sed -i -e 's@-Wall@%{rpmcflags} -I/usr/include/ncurses -Wall@' make/defines.mk.input
 
 %build
 ./configure \
@@ -325,6 +363,9 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/cluster,/etc/rc.d/init.d} \
 mv $RPM_BUILD_ROOT/''etc/init.d/* $RPM_BUILD_ROOT/etc/rc.d/init.d
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
+
+# let rpm autogenerate dependencies
+chmod +x $RPM_BUILD_ROOT%{_libdir}/lib*.so*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -351,13 +392,16 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/ccs_test
 %attr(755,root,root) %{_sbindir}/ccs_tool
 %attr(755,root,root) %{_sbindir}/ccs_update_schema
-%attr(755,root,root) %{_libdir}/lcrso/*.lcrso
-%{_mandir}/man8/ccs_config_dump.*
-%{_mandir}/man8/ccs_config_validate.*
-%{_mandir}/man8/ccs_tool.*
-%{_mandir}/man8/ccs_update_schema.*
+%attr(755,root,root) %{_libdir}/lcrso/config_cmanpre.lcrso
+%{?with_ldap:%attr(755,root,root) %{_libdir}/lcrso/config_ldap.lcrso}
+%attr(755,root,root) %{_libdir}/lcrso/config_xml.lcrso
+%attr(755,root,root) %{_libdir}/lcrso/service_cman.lcrso
+%{_mandir}/man8/ccs_config_dump.8*
+%{_mandir}/man8/ccs_config_validate.8*
+%{_mandir}/man8/ccs_tool.8*
+%{_mandir}/man8/ccs_update_schema.8*
 %if %{with ldap}
-%{_mandir}/man8/confdb2ldif.*
+%{_mandir}/man8/confdb2ldif.8*
 %endif
 %attr(700,root,root) /var/run/cluster
 %{systemdtmpfilesdir}/%{name}.conf
@@ -379,7 +423,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files cman
 %defattr(644,root,root,755)
-%{_sysconfdir}/cluster
+%dir %{_sysconfdir}/cluster
+%dir %{_sysconfdir}/cluster/cman-notify.d
 /etc/logrotate.d/cluster
 %attr(754,root,root) /etc/rc.d/init.d/cman
 %attr(755,root,root) %{_sbindir}/cman_notify
@@ -389,16 +434,23 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/qdiskd
 %{_datadir}/cluster
 %{_docdir}/cluster
-%{_mandir}/man5/cluster.conf.*
-%{_mandir}/man5/cman.*
-%{_mandir}/man5/qdisk.*
-%{_mandir}/man8/checkquorum.*
-%{_mandir}/man8/cman_notify.*
-%{_mandir}/man8/cman_tool.*
-%{_mandir}/man8/cmannotifyd.*
-%{_mandir}/man8/mkqdisk.*
-%{_mandir}/man8/qdiskd.*
+%{_mandir}/man5/cluster.conf.5*
+%{_mandir}/man5/cman.5*
+%{_mandir}/man5/qdisk.5*
+%{_mandir}/man8/checkquorum.8*
+%{_mandir}/man8/cman_notify.8*
+%{_mandir}/man8/cman_tool.8*
+%{_mandir}/man8/cmannotifyd.8*
+%{_mandir}/man8/mkqdisk.8*
+%{_mandir}/man8/qdiskd.8*
 /var/log/cluster
+
+%files cman-libs
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libcman.so.3.0
+%attr(755,root,root) %ghost %{_libdir}/libcman.so.3
+%attr(755,root,root) %{_libdir}/liblogthread.so.3.0
+%attr(755,root,root) %ghost %{_libdir}/liblogthread.so.3
 
 %files cman-devel
 %defattr(644,root,root,755)
@@ -409,13 +461,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgconfigdir}/libcman.pc
 %{_pkgconfigdir}/liblogthread.pc
 
-%files cman-libs
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libcman.so.3.0
-%attr(755,root,root) %ghost %{_libdir}/libcman.so.3
-%attr(755,root,root) %{_libdir}/liblogthread.so.3.0
-%attr(755,root,root) %ghost %{_libdir}/liblogthread.so.3
-
 %files cman-static
 %defattr(644,root,root,755)
 %{_libdir}/libcman.a
@@ -425,20 +470,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 /lib/udev/rules.d/51-dlm.rules
 %attr(755,root,root) %{_sbindir}/dlm_tool
-%{_mandir}/man8/dlm_tool.*
-
-%files dlm-devel
-%defattr(644,root,root,755)
-%{_includedir}/libdlm.h
-%{_includedir}/libdlmcontrol.h
-%{_pkgconfigdir}/libdlm.pc
-%{_pkgconfigdir}/libdlm_lt.pc
-%{_pkgconfigdir}/libdlmcontrol.pc
-%attr(755,root,root) %{_libdir}/libdlm.so
-%attr(755,root,root) %{_libdir}/libdlm_lt.so
-%attr(755,root,root) %{_libdir}/libdlmcontrol.so
-%{_mandir}/man3/dlm_*.*
-%{_mandir}/man3/libdlm.*
+%{_mandir}/man8/dlm_tool.8*
 
 %files dlm-libs
 %defattr(644,root,root,755)
@@ -448,6 +480,19 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libdlm_lt.so.3
 %attr(755,root,root) %{_libdir}/libdlmcontrol.so.3.1
 %attr(755,root,root) %ghost %{_libdir}/libdlmcontrol.so.3
+
+%files dlm-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libdlm.so
+%attr(755,root,root) %{_libdir}/libdlm_lt.so
+%attr(755,root,root) %{_libdir}/libdlmcontrol.so
+%{_includedir}/libdlm.h
+%{_includedir}/libdlmcontrol.h
+%{_pkgconfigdir}/libdlm.pc
+%{_pkgconfigdir}/libdlm_lt.pc
+%{_pkgconfigdir}/libdlmcontrol.pc
+%{_mandir}/man3/dlm_*.3*
+%{_mandir}/man3/libdlm.3*
 
 %files dlm-static
 %defattr(644,root,root,755)
@@ -460,19 +505,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/fence_*
 %attr(755,root,root) %{_sbindir}/fenced
 %{perl_vendorarch}/Cluster
-%{perl_vendorarch}/auto/Cluster
-%{_mandir}/man8/fence_*.*
-%{_mandir}/man8/fenced.*
-
-%files fence-devel
-%defattr(644,root,root,755)
-%{_includedir}/libfence.h
-%{_includedir}/libfenced.h
-%{_pkgconfigdir}/libfence.pc
-%{_pkgconfigdir}/libfenced.pc
-%attr(755,root,root) %{_libdir}/libfence.so
-%attr(755,root,root) %{_libdir}/libfenced.so
-%{_mandir}/man3/Cluster::CCS.3pm.*
+%dir %{perl_vendorarch}/auto/Cluster
+%dir %{perl_vendorarch}/auto/Cluster/CCS
+%{perl_vendorarch}/auto/Cluster/CCS/CCS.bs
+%attr(755,root,root) %{perl_vendorarch}/auto/Cluster/CCS/CCS.so
+%{_mandir}/man3/Cluster::CCS.3pm*
+%{_mandir}/man8/fence_*.8*
+%{_mandir}/man8/fenced.8*
 
 %files fence-libs
 %defattr(644,root,root,755)
@@ -480,6 +519,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libfence.so.4
 %attr(755,root,root) %{_libdir}/libfenced.so.3.0
 %attr(755,root,root) %ghost %{_libdir}/libfenced.so.3
+
+%files fence-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libfence.so
+%attr(755,root,root) %{_libdir}/libfenced.so
+%{_includedir}/libfence.h
+%{_includedir}/libfenced.h
+%{_pkgconfigdir}/libfence.pc
+%{_pkgconfigdir}/libfenced.pc
 
 %files fence-static
 %defattr(644,root,root,755)
@@ -491,12 +539,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/dlm_controld
 %attr(755,root,root) %{_sbindir}/group_tool
 %attr(755,root,root) %{_sbindir}/groupd
-%{_mandir}/man8/dlm_controld.*
-%{_mandir}/man8/group_tool.*
-%{_mandir}/man8/groupd.*
+%{_mandir}/man8/dlm_controld.8*
+%{_mandir}/man8/group_tool.8*
+%{_mandir}/man8/groupd.8*
 
 %files rgmanager
 %defattr(644,root,root,755)
+%attr(754,root,root) /etc/rc.d/init.d/cpglockd
 %attr(754,root,root) /etc/rc.d/init.d/rgmanager
 %attr(755,root,root) %{_sbindir}/clubufflush
 %attr(755,root,root) %{_sbindir}/clufindhostname
@@ -505,12 +554,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/clurgmgrd
 %attr(755,root,root) %{_sbindir}/clustat
 %attr(755,root,root) %{_sbindir}/clusvcadm
+%attr(755,root,root) %{_sbindir}/cpglockd
+%attr(755,root,root) %{_sbindir}/cpglockdump
 %attr(755,root,root) %{_sbindir}/rg_test
 %attr(755,root,root) %{_sbindir}/rgmanager
-%{_mandir}/man8/clubufflush.*
-%{_mandir}/man8/clufindhostname.*
-%{_mandir}/man8/clulog.*
-%{_mandir}/man8/clurgmgrd.*
-%{_mandir}/man8/clustat.*
-%{_mandir}/man8/clusvcadm.*
-%{_mandir}/man8/rgmanager.*
+%{_mandir}/man8/clubufflush.8*
+%{_mandir}/man8/clufindhostname.8*
+%{_mandir}/man8/clulog.8*
+%{_mandir}/man8/clurgmgrd.8*
+%{_mandir}/man8/clustat.8*
+%{_mandir}/man8/clusvcadm.8*
+%{_mandir}/man8/cpglockd.8*
+%{_mandir}/man8/rgmanager.8*
